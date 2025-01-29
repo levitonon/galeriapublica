@@ -55,8 +55,7 @@ public class GalleryRepository {
              );
              queryArgs.putInt(
                      ContentResolver.QUERY_ARG_SORT_DIRECTION,
-                     ContentResolver.QUERY_SORT_DIRECTION_ASCENDING
-            . );
+                     ContentResolver.QUERY_SORT_DIRECTION_ASCENDING);
              // limit, offset
              queryArgs.putInt(ContentResolver.QUERY_ARG_LIMIT, limit);
              queryArgs.putInt(ContentResolver.QUERY_ARG_OFFSET,
@@ -87,8 +86,7 @@ public class GalleryRepository {
              int size = cursor.getInt(sizeColumn);
              Bitmap thumb = Util.getBitmap(context, contentUri, w, h);
 
-             // Stores column values and the contentUri in a local
-            object
+             // Stores column values and the contentUri in a local object
              // that represents the media file.
              imageDataList.add(new ImageData(contentUri, thumb, name,
                     new Date(dateAdded*1000L), size));
