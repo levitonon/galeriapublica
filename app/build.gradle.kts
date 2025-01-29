@@ -32,12 +32,17 @@ android {
 }
 
 dependencies {
+    // optional - Guava ListenableFuture support
+    implementation(libs.paging.guava)
+    implementation(libs.paging.runtime)
 
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.mediarouter)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
 }
