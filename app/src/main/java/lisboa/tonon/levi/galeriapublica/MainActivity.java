@@ -21,11 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
     BottomNavigationView bottomNavigationView;
 
     void setFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction =
-                getSupportFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        // Define o fragmento que será mostrado.
         fragmentTransaction.replace(R.id.fragContainer, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -42,70 +43,86 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Recupera uma instância do MainViewModel, que gerencia dados e estado para esta Activity.
         final MainViewModel vm = new ViewModelProvider(this).get(MainViewModel.class);
 
+        // Localiza o BottomNavigationView no layout.
         bottomNavigationView = findViewById(R.id.btNav);
+
+        // Configura o item selecionado da barra de navegação.
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                // Sinaliza ao ViewModel qual item de navegação foi escolhido.
                 vm.setNavigationOpSelected(item.getItemId());
+
                 int itemId = item.getItemId();
+                // Se for selecionada a opção de “grid” (R.id.gridViewOp), cria e exibe o GridViewFragment.
                 if (itemId == R.id.gridViewOp) {
-                    GridViewFragment gridViewFragment =
-                            GridViewFragment.newInstance();
+                    GridViewFragment gridViewFragment = GridViewFragment.newInstance();
                     setFragment(gridViewFragment);
-                } else if (itemId == R.id.listViewOp) {
+                }
+                // Se for selecionada a opção de “lista” (R.id.listViewOp), cria e exibe o ListViewFragment.
+                else if (itemId == R.id.listViewOp) {
                     ListViewFragment listViewFragment = ListViewFragment.newInstance();
                     setFragment(listViewFragment);
                 }
                 return true;
             }
-
         });
-
-
-
-
     }
+
     @Override
     protected void onResume() {
         super.onResume();
+        // Lista de permissões para verificar
         List<String> permissions = new ArrayList<>();
         permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        // Método chamado para ver se as permissões necessárias já foram concedidas.
         checkForPermissions(permissions);
     }
 
     private void checkForPermissions(List<String> permissions) {
+        // Monta uma lista para armazenar as permissões não concedidas.
         List<String> permissionsNotGranted = new ArrayList<>();
         permissionsNotGranted.size();
-        MainViewModel vm = new
-                ViewModelProvider(this).get(MainViewModel.class);
+
+        // Recupera o ViewModel para saber qual item de navegação está selecionado.
+        MainViewModel vm = new ViewModelProvider(this).get(MainViewModel.class);
         int navigationOpSelected = vm.getNavigationOpSelected();
+
+        // Força o BottomNavigationView a marcar o item que estava selecionado anteriormente.
         bottomNavigationView.setSelectedItemId(navigationOpSelected);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull
-    String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String[] permissions,
+            @NonNull int[] grantResults
+    ) {
+        // Chamado quando o usuário responde ao pedido de permissões.
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
+        // Lista de permissões rejeitadas.
         List<String> permissionsRejected = new ArrayList<>();
 
-        // Verifica quais permissões foram negadas
+        // Itera sobre o array de permissões para ver quais foram negadas.
         for (int i = 0; i < permissions.length; i++) {
+            // Se o resultado não foi PERMISSION_GRANTED, adiciona à lista de rejeitadas.
             if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                 permissionsRejected.add(permissions[i]);
             }
         }
 
         if (!permissionsRejected.isEmpty()) {
-            // Aqui você pode exibir um alerta para o usuário ou tomar outra ação necessária
+            // Exibir alerta
         } else {
+            // Se todas as permissões foram concedidas, restaura o item de navegação selecionado.
             MainViewModel vm = new ViewModelProvider(this).get(MainViewModel.class);
             int navigationOpSelected = vm.getNavigationOpSelected();
             bottomNavigationView.setSelectedItemId(navigationOpSelected);
         }
     }
-
-
 }
