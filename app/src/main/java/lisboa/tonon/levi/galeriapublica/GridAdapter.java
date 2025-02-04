@@ -13,8 +13,9 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import java.text.SimpleDateFormat;
 
-public class GridAdapter extends PagingDataAdapter<ImageData, MyViewHolder> {
+package lisboa.tonon.levi.galeriapublica;
 
+public class GridAdapter extends PagingDataAdapter<ImageData, MyViewHolder> {
     public GridAdapter(@NonNull DiffUtil.ItemCallback<ImageData> diffCallback) {
         super(diffCallback);
     }
