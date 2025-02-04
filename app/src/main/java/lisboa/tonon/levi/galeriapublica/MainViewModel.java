@@ -17,33 +17,41 @@ import kotlinx.coroutines.CoroutineScope;
 
 public class MainViewModel extends AndroidViewModel {
 
- int navigationOpSelected = R.id.gridViewOp;
+    // Guarda o item de navegação selecionado
+    int navigationOpSelected = R.id.gridViewOp;
 
+    // LiveData que emite PagingData contendo objetos ImageData
     LiveData<PagingData<ImageData>> pageLv;
+
     public MainViewModel(@NonNull Application application) {
         super(application);
-        GalleryRepository galleryRepository = new
-                GalleryRepository(application);
-       GalleryPagingSource galleryPagingSource = new
-                GalleryPagingSource(galleryRepository);
-         Pager<Integer, ImageData> pager = new Pager(new
-                 PagingConfig(10), () -> galleryPagingSource);
-        CoroutineScope viewModelScope =
-                ViewModelKt.getViewModelScope(this);
-         pageLv =
-                PagingLiveData.cachedIn(PagingLiveData.getLiveData(pager),
-                        viewModelScope);
-         }
+        GalleryRepository galleryRepository = new GalleryRepository(application);
 
-         public LiveData<PagingData<ImageData>> getPageLv() {
-         return pageLv;    }
-      public int getNavigationOpSelected() {
-      return navigationOpSelected;
-      }
+        // Iinforma qual parte dos dados deve ser carregada em cada requisição.
+        GalleryPagingSource galleryPagingSource = new GalleryPagingSource(galleryRepository);
 
- public void setNavigationOpSelected(int navigationOpSelected) {
- this.navigationOpSelected = navigationOpSelected;
- }
+        // Cria um Pager, definindo uma configuração de paginação
+        Pager<Integer, ImageData> pager = new Pager<>(new PagingConfig(10), () -> galleryPagingSource);
+        CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
 
+        pageLv = PagingLiveData.cachedIn(
+                PagingLiveData.getLiveData(pager),
+                viewModelScope
+        );
+    }
+
+    // Retorna o LiveData que emite o PagingData de ImageData.
+    public LiveData<PagingData<ImageData>> getPageLv() {
+        return pageLv;
+    }
+
+    // Informa qual item de navegação está selecionado
+    public int getNavigationOpSelected() {
+        return navigationOpSelected;
+    }
+
+    // Atualiza o estado de qual item de navegação está selecionado.
+    public void setNavigationOpSelected(int navigationOpSelected) {
+        this.navigationOpSelected = navigationOpSelected;
+    }
 }
-
